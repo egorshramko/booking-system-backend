@@ -3,6 +3,8 @@ package io.github.egorshramko.booking.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Сущность роли
@@ -21,6 +23,12 @@ public class Role {
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     private String name;
+
+    @ManyToMany
+    @JoinTable(name = "role_permission",
+        joinColumns = @JoinColumn(name = "role_"),
+        inverseJoinColumns = @JoinColumn(name = "permission"))
+    private Set<Permission> permissions = new HashSet<>();
 
 
 }
