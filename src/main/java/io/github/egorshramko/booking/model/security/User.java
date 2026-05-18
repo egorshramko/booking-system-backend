@@ -1,7 +1,8 @@
-package io.github.egorshramko.booking.model;
+package io.github.egorshramko.booking.model.security;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.Set;
  * Также к данной сущности привязан профиль пользователя
  */
 @Entity
+@Data
 @Table(name = "user_")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,6 +28,8 @@ public class User {
     private Long id;
 
     private final LocalDateTime createdAt = LocalDateTime.now();
+
+    private Boolean actual;
 
     private String login;
 

@@ -1,5 +1,6 @@
 package io.github.egorshramko.booking.model;
 
+import io.github.egorshramko.booking.model.security.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
