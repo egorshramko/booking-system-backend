@@ -27,6 +27,8 @@ public class Cinema {
 
     private String address;
 
+    private String city;
+
     //JSON схемы мест
     private String seatingChartJson;
 
