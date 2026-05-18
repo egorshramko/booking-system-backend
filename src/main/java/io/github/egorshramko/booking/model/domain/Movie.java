@@ -40,6 +40,6 @@ public class Movie {
     @Enumerated(EnumType.STRING)
     private AgeLimit ageLimit;
 
-    private String pathToPoster;
+    private String posterFilename;
 
 }
