@@ -13,3 +13,12 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+
+aws:
+  region: us-east-1
+  s3:
+    access-key: ${MINIO_ROOT_USER}
+    secret-key: ${MINIO_ROOT_PASSWORD}
+    endpoint: ${MINIO_ENDPOINT}
+    bucket: movie-images
+    path-style-access-enabled: true
