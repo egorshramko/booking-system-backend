@@ -1,12 +1,9 @@
 package io.github.egorshramko.booking.service.impl;
 
 import io.github.egorshramko.booking.service.ImageService;
-import jakarta.persistence.AccessType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.http.SdkHttpMethod;
-import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
