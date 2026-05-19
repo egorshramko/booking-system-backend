@@ -45,12 +45,18 @@ public class Cinema {
     }
 
     public void setManager(Employee employee) {
-        Employee managerEmployee = employees.stream()
+        Optional<Employee> managerEmployeeOptional = employees.stream()
                 .filter(emp -> emp.equals(employee))
-                .findAny()
-                .orElseThrow(() -> new RuntimeException("This employee not found in cinema employees"));
+                .findAny();
 
-        managerEmployee.setManager(true);
+        if (managerEmployeeOptional.isEmpty()) {
+            employee.setManager(true);
+            this.addEmployee(employee);
+        }
+        else {
+            Employee managerEmployee = managerEmployeeOptional.get();
+            managerEmployee.setManager(true);
+        }
 
     }
 

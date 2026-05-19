@@ -30,7 +30,7 @@ public class Employee {
 
     private Boolean actual;
 
-    //Признак, что сотрудник является управляющим кинотеатра
+    //Признак, что сотрудник является управляющим кинотеатром
     @Getter(AccessLevel.NONE)
     private Boolean manager;
 
