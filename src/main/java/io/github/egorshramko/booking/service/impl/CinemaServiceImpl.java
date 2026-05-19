@@ -9,7 +9,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +35,7 @@ public class CinemaServiceImpl implements CinemaService {
         validateRequiredFields(cinema);
 
         //Поиск кинотеатра в базе (возможно, он был ранее удален)
-        Optional<Cinema> cinemaOptional = cinemaRepository.findByNameAddressCity(
+        Optional<Cinema> cinemaOptional = cinemaRepository.findByNameAndAddressAndCity(
                 cinema.getName(),
                 cinema.getAddress(),
                 cinema.getCity());
@@ -144,7 +143,7 @@ public class CinemaServiceImpl implements CinemaService {
 
     @Override
     public Page<Cinema> getCinemasPage(Integer pageNumber) {
-        return cinemaRepository.findAllActualIsTrue(
+        return cinemaRepository.findAllByActualIsTrue(
                 PageRequest.of(pageNumber, 20, Sort.by("city", "name").ascending()));
     }
 
@@ -154,7 +153,7 @@ public class CinemaServiceImpl implements CinemaService {
         log.info("Starts seating chart JSON updating");
         log.info("Cinema ID: {}", cinemaId);
 
-        Cinema editedCinema = cinemaRepository.findByIdActualIsTrue(cinemaId)
+        Cinema editedCinema = cinemaRepository.findByIdAndActualIsTrue(cinemaId)
                 .orElseThrow(() -> new EntityNotFoundException("Cinema with id " + cinemaId + " not found"));
 
         editedCinema.setSeatingChartJson(seatingChartJson);
@@ -167,7 +166,7 @@ public class CinemaServiceImpl implements CinemaService {
     public void appointManager(Long cinemaId, Employee manager) {
         log.info("Starts appointing cinema manager");
 
-        Cinema cinema = cinemaRepository.findByIdActualIsTrue(cinemaId)
+        Cinema cinema = cinemaRepository.findByIdAndActualIsTrue(cinemaId)
                 .orElseThrow(() -> new EntityNotFoundException("Cinema with id " + cinemaId + " not found"));
 
         cinema.setManager(manager);

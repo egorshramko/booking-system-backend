@@ -96,7 +96,7 @@ public class MovieServiceImpl implements MovieService {
         log.info("Removing movie with id {}", movieId);
 
         //Поиск фильма для удаления
-        Optional<Movie> movieOptional = movieRepository.findByIdActualIsTrue(movieId);
+        Optional<Movie> movieOptional = movieRepository.findByIdAndActualIsTrue(movieId);
 
         if (movieOptional.isPresent()) {
             log.info("Movie is found. Removing");
@@ -125,7 +125,7 @@ public class MovieServiceImpl implements MovieService {
 
         //Поиск фильма для изменения
         log.info("Data validated. Searching movie entity with id {}", movie.getId());
-        Optional<Movie> movieOptional = movieRepository.findByIdActualIsTrue(movie.getId());
+        Optional<Movie> movieOptional = movieRepository.findByIdAndActualIsTrue(movie.getId());
         if (movieOptional.isEmpty()) {
             log.warn("Movie with id {} not found", movie.getId());
             throw new EntityNotFoundException("Movie with id " + movie.getId() + " not found");
@@ -142,14 +142,14 @@ public class MovieServiceImpl implements MovieService {
     @Override
     public Movie getMovieById(Long movieId) {
 
-        return movieRepository.findByIdActualIsTrue(movieId)
+        return movieRepository.findByIdAndActualIsTrue(movieId)
                 .orElseThrow(() ->
                         new EntityNotFoundException("Movie with id " + movieId + " not found"));
     }
 
     @Override
     public Page<Movie> getMoviesInRental(Integer pageNumber) {
-        return movieRepository.findAllActualIsTrue(PageRequest.of(pageNumber, 20,
+        return movieRepository.findAllByActualIsTrue(PageRequest.of(pageNumber, 20,
                 Sort.by("name").ascending()));
     }
 

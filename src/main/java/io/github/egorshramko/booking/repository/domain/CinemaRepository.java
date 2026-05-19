@@ -11,8 +11,8 @@ import java.util.Optional;
 @Repository
 public interface CinemaRepository extends JpaRepository<Cinema, Long> {
 
-    Optional<Cinema> findByNameAddressCity(String name, String address, String city);
-    Page<Cinema> findAllActualIsTrue(Pageable pageable);
-    Optional<Cinema> findByIdActualIsTrue(Long id);
+    Optional<Cinema> findByNameAndAddressAndCity(String name, String address, String city);
+    Page<Cinema> findAllByActualIsTrue(Pageable pageable);
+    Optional<Cinema> findByIdAndActualIsTrue(Long id);
 
 }

@@ -9,7 +9,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -22,7 +21,7 @@ public interface MovieRepository extends CrudRepository<Movie, Long> {
             @Param("releaseYear") Integer releaseYear,
             @Param("ageLimit") AgeLimit ageLimit);
 
-    Optional<Movie> findByIdActualIsTrue(Long id);
-    Page<Movie> findAllActualIsTrue(Pageable pageable);
+    Optional<Movie> findByIdAndActualIsTrue(Long id);
+    Page<Movie> findAllByActualIsTrue(Pageable pageable);
 
 }
