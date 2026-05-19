@@ -1,6 +1,8 @@
 package io.github.egorshramko.booking.service;
 
+import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.model.domain.Cinema;
+import org.antlr.v4.runtime.atn.SemanticContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -14,7 +16,7 @@ public interface CinemaService {
      * @param cinema - данные кинотеатра, который необходимо добавить
      * @return Возвращает созданную сущность кинотеатра
      */
-    Cinema addCinema(Cinema cinema);
+    Cinema addCinema(Cinema cinema) throws EmptyRequiredFieldException;
 
     /**
      * Метод получения кинотеатра по ID
@@ -28,7 +30,7 @@ public interface CinemaService {
      * @param cinema - данные кинотеатра для редактирования
      * @return Возвращает отредактированную сущность кинотеатра
      */
-    Cinema editCinema(Cinema cinema);
+    Cinema editCinema(Cinema cinema) throws EmptyRequiredFieldException;
 
     /**
      * Метод удаления кинотеатра из системы по ID
@@ -41,7 +43,7 @@ public interface CinemaService {
      * @param pageable - представление страницы кинотеатров
      * @return Возвращает страницу с кинотеатрами
      */
-    Page<Cinema> getCinemasPage(Pageable pageable);
+    Page<Cinema> getCinemasPage(Integer pageNumber);
 
     /**
      * Метод добавления JSON схемы посадки в кинотеатре
