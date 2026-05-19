@@ -2,6 +2,7 @@ package io.github.egorshramko.booking.service;
 
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.model.domain.Cinema;
+import io.github.egorshramko.booking.model.domain.Employee;
 import org.antlr.v4.runtime.atn.SemanticContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,7 +41,7 @@ public interface CinemaService {
 
     /**
      * Метод получения списка кинотеатров постранично
-     * @param pageable - представление страницы кинотеатров
+     * @param pageNumber Номер страницы
      * @return Возвращает страницу с кинотеатрами
      */
     Page<Cinema> getCinemasPage(Integer pageNumber);
@@ -51,4 +52,11 @@ public interface CinemaService {
      * @param seatingChartJson - JSON схемы посадки
      */
     void setSeatingChartJson(Long cinemaId, String seatingChartJson);
+
+    /**
+     * Метод назначения управляющего кинотеатром
+     * @param cinemaId - ID кинотеатра
+     * @param manager - Сотрудник, которого необходимо назначить менеджером
+     */
+    void appointManager(Long cinemaId, Employee manager);
 }

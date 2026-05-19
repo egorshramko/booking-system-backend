@@ -2,9 +2,7 @@ package io.github.egorshramko.booking.model.domain;
 
 import io.github.egorshramko.booking.model.Profile;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -32,6 +30,10 @@ public class Employee {
 
     private Boolean actual;
 
+    //Признак, что сотрудник является управляющим кинотеатра
+    @Getter(AccessLevel.NONE)
+    private Boolean manager;
+
     private String position;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,5 +41,9 @@ public class Employee {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Profile profile;
+
+    public Boolean isManager() {
+        return manager;
+    }
 
 }

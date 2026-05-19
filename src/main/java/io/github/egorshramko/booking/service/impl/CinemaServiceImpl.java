@@ -2,6 +2,7 @@ package io.github.egorshramko.booking.service.impl;
 
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.model.domain.Cinema;
+import io.github.egorshramko.booking.model.domain.Employee;
 import io.github.egorshramko.booking.repository.domain.CinemaRepository;
 import io.github.egorshramko.booking.service.CinemaService;
 import jakarta.persistence.EntityNotFoundException;
@@ -159,6 +160,21 @@ public class CinemaServiceImpl implements CinemaService {
         editedCinema.setSeatingChartJson(seatingChartJson);
         cinemaRepository.save(editedCinema);
         log.info("Seating chart JSON updating successfully. Cinema ID: {}", cinemaId);
+    }
+
+    @Override
+    @Transactional
+    public void appointManager(Long cinemaId, Employee manager) {
+        log.info("Starts appointing cinema manager");
+
+        Cinema cinema = cinemaRepository.findByIdActualIsTrue(cinemaId)
+                .orElseThrow(() -> new EntityNotFoundException("Cinema with id " + cinemaId + " not found"));
+
+        cinema.setManager(manager);
+        cinemaRepository.save(cinema);
+
+        log.info("Appointing manager to cinema ends successful");
+
     }
 
     private void validateRequiredFields(Cinema cinema) throws EmptyRequiredFieldException {

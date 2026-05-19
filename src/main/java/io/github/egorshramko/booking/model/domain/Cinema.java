@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.*;
 
 @Entity
 @Data
@@ -29,7 +30,39 @@ public class Cinema {
 
     private String city;
 
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST})
+    @JoinColumn(name = "cinema_id")
+    private Set<Employee> employees = new HashSet<>();
+
     //JSON схемы мест
     private String seatingChartJson;
+
+    public Employee getManager() {
+        return employees.stream()
+                .filter(Employee::isManager)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public void setManager(Employee employee) {
+        Employee managerEmployee = employees.stream()
+                .filter(emp -> emp.equals(employee))
+                .findAny()
+                .orElseThrow(() -> new RuntimeException("This employee not found in cinema employees"));
+
+        managerEmployee.setManager(true);
+
+    }
+
+    public void addEmployee(Employee employee) {
+        boolean addingSuccessfully = employees.add(employee);
+        if (!addingSuccessfully) {
+            throw new RuntimeException("Unknown error while adding employee to cinema");
+        }
+    }
+
+    public boolean removeEmployee(Employee employee) {
+        return employees.remove(employee);
+    }
 
 }
