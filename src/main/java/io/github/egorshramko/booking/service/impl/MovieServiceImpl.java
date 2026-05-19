@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
@@ -33,6 +34,7 @@ public class MovieServiceImpl implements MovieService {
     private String s3BucketName;
 
     @Override
+    @Transactional
     public Movie addMovie(Movie movie) throws NoSuchFileException {
 
         //Проверка, что изображение постера было загружено в S3-хранилище
@@ -88,6 +90,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional
     public void removeMovie(Long movieId) {
 
         log.info("Removing movie with id {}", movieId);
@@ -108,6 +111,7 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
+    @Transactional
     public Movie editMovie(Movie movie) throws EmptyRequiredFieldException {
 
         log.info("Edit movie");
