@@ -48,7 +48,7 @@ public class User implements UserDetails {
     public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
                 .flatMap(role -> role.getPermissions().stream())
-                .sorted(Comparator.comparing(Permission::getName))
+                .sorted(Comparator.comparing(Permission::getAuthority))
                 .collect(Collectors.toList());
     }
 }

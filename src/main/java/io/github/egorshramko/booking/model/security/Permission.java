@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -30,14 +32,14 @@ public class Permission implements GrantedAuthority {
 
     private Boolean actual;
 
-    private String name;
-
+    @NonNull
     private PermissionType type;
 
+    @NonNull
     private ObjectType object;
 
     @Override
-    public @Nullable String getAuthority() {
-        return name;
+    public @NonNull String getAuthority() {
+        return type.toString().toUpperCase() + "_" + object.toString().toUpperCase();
     }
 }
