@@ -2,6 +2,7 @@ package io.github.egorshramko.booking.model.security;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jspecify.annotations.NonNull;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Table(name = "user_")
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User implements UserDetails {
 
     @Id
@@ -34,11 +36,12 @@ public class User implements UserDetails {
 
     private Boolean actual;
 
+    @Column(unique = true)
     private String username;
 
     private String password;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST})
     @JoinTable(name = "user_role",
         joinColumns = @JoinColumn(name = "user_"),
         inverseJoinColumns = @JoinColumn(name = "role_"))

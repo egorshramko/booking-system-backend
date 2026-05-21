@@ -1,10 +1,7 @@
 package io.github.egorshramko.booking.model.security;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,6 +17,8 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
+@Table(name = "permission_")
 public class Permission implements GrantedAuthority {
 
     @Id
@@ -33,9 +32,11 @@ public class Permission implements GrantedAuthority {
     private Boolean actual;
 
     @NonNull
+    @Enumerated(EnumType.STRING)
     private PermissionType type;
 
     @NonNull
+    @Enumerated(EnumType.STRING)
     private ObjectType object;
 
     @Override

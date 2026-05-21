@@ -2,6 +2,7 @@ package io.github.egorshramko.booking.model.security;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Role {
 
     @Id
@@ -32,10 +34,10 @@ public class Role {
 
     private String name;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST})
     @JoinTable(name = "role_permission",
         joinColumns = @JoinColumn(name = "role_"),
-        inverseJoinColumns = @JoinColumn(name = "permission"))
+        inverseJoinColumns = @JoinColumn(name = "permission_"))
     private Set<Permission> permissions = new HashSet<>();
 
 }
