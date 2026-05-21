@@ -51,6 +51,9 @@ public class S3Config {
         if (endpoint != null && !endpoint.isEmpty()) {
             s3ClientBuilder.endpointOverride(URI.create(endpoint));
         }
+        s3ClientBuilder.serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(pathStyleAccessEnabled)
+                        .build());
 
         return s3ClientBuilder.build();
     }
