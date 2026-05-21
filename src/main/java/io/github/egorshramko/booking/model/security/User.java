@@ -4,10 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.jspecify.annotations.NonNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Сущность пользователя
@@ -19,7 +22,7 @@ import java.util.Set;
 @Table(name = "user_")
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
 
     @Id
     @SequenceGenerator(name = "user_id_gen", sequenceName = "user_pkey_seq",
@@ -31,7 +34,7 @@ public class User {
 
     private Boolean actual;
 
-    private String login;
+    private String username;
 
     private String password;
 
@@ -40,4 +43,12 @@ public class User {
         joinColumns = @JoinColumn(name = "user_"),
         inverseJoinColumns = @JoinColumn(name = "role_"))
     private Set<Role> roles = new HashSet<>();
+
+    @Override
+    public @NonNull Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .flatMap(role -> role.getPermissions().stream())
+                .sorted(Comparator.comparing(Permission::getName))
+                .collect(Collectors.toList());
+    }
 }
