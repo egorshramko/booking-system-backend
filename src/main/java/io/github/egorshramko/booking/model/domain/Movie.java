@@ -40,6 +40,8 @@ public class Movie {
     @Enumerated(EnumType.STRING)
     private AgeLimit ageLimit;
 
+    //TODO: добавить поле, кем добавлен в справочник
+
     private String posterFilename;
 
 }
