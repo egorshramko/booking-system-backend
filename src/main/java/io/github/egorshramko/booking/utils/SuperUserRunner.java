@@ -55,7 +55,6 @@ public class SuperUserRunner implements CommandLineRunner {
                     .actual(true)
                     .username("root")
                     .password(passwordEncoder.encode("root"))
-                    //.roles(new HashSet<>())
                     .build();
             superuser.addRole(superuserRole);
             userRepository.save(superuser);
