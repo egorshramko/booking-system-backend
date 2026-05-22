@@ -32,6 +32,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_gen")
     private Long id;
 
+    @Builder.Default
     private final LocalDateTime createdAt = LocalDateTime.now();
 
     private Boolean actual;

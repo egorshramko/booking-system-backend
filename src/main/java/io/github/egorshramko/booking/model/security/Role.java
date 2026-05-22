@@ -1,10 +1,7 @@
 package io.github.egorshramko.booking.model.security;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -28,8 +25,10 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_id_gen")
     private Long id;
 
+    @Builder.Default
     private final LocalDateTime createdAt = LocalDateTime.now();
 
+    @Getter(AccessLevel.NONE)
     private Boolean actual;
 
     private String name;
@@ -39,5 +38,9 @@ public class Role {
         joinColumns = @JoinColumn(name = "role_"),
         inverseJoinColumns = @JoinColumn(name = "permission_"))
     private Set<Permission> permissions = new HashSet<>();
+
+    public Boolean isActual() {
+        return actual;
+    }
 
 }
