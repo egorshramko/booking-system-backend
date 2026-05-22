@@ -1,9 +1,7 @@
-debug: true
-
 logging:
   level:
     root: INFO
-    org.flywaydb: DEBUG
+    #org.flywaydb: DEBUG
 
 spring:
   application:

@@ -34,7 +34,7 @@ public class Role {
 
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST})
+    @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(name = "role_permission",
         joinColumns = @JoinColumn(name = "role_"),
         inverseJoinColumns = @JoinColumn(name = "permission_"))
