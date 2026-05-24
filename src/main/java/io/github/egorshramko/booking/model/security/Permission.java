@@ -44,4 +44,14 @@ public class Permission implements GrantedAuthority {
     public @NonNull String getAuthority() {
         return type.toString().toUpperCase() + "_" + object.toString().toUpperCase();
     }
+
+    /**
+     * Метод установки разрешения через его имя
+     * @param name - имя разрешения в формате TYPE_OBJECT
+     */
+    public void setAuthority(String name) {
+        String[] data = name.split("/_/");
+        this.type = PermissionType.valueOf(data[0]);
+        this.object = ObjectType.valueOf(data[1]);
+    }
 }
