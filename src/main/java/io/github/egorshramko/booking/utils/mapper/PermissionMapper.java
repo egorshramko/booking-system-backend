@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
 import org.mapstruct.Named;
 
+import java.util.Set;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface PermissionMapper {
 
@@ -29,5 +31,8 @@ public interface PermissionMapper {
     default String mapObject(String name) {
         return name.split("_", 2)[1];
     }
+
+    Set<Permission> toEntitySet(Set<PermissionDto> dtoSet);
+    Set<PermissionDto> toDtoSet(Set<Permission> entitySet);
 
 }
