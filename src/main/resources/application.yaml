@@ -31,3 +31,8 @@ aws:
 
   buckets:
     movie-service: "movie-images"
+
+jwt:
+  secret:
+    access: ${ACCESS_TOKEN_SECRET}
+    refresh: ${REFRESH_TOKEN_SECRET}
