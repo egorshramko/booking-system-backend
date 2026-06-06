@@ -21,6 +21,11 @@ spring:
     hibernate:
       ddl-auto: validate
 
+  redis:
+    host: ${REDIS_HOST}
+    port: ${REDIS_PORT}
+    timeout: 60000
+
 aws:
   region: us-east-1
   s3:
@@ -36,3 +41,5 @@ jwt:
   secret:
     access: ${ACCESS_TOKEN_SECRET}
     refresh: ${REFRESH_TOKEN_SECRET}
+  ttl:
+    refresh: 30
