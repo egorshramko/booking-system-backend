@@ -2,6 +2,14 @@ logging:
   level:
     root: INFO
     #org.flywaydb: DEBUG
+    io:
+      github:
+        egorshramko:
+          booking:
+            service:
+              security:
+                impl:
+                  AuthServiceImpl: INFO
 
 spring:
   application:

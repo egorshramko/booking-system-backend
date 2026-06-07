@@ -43,15 +43,25 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public JwtResponse login(@NonNull JwtRequest authRequest) throws AuthException {
-        final User user = (User) userService.loadUserByUsername(authRequest.username());
-        final String encodedPassword = passwordEncoder.encode(authRequest.password());
+        log.debug("login method started");
 
-        if (encodedPassword != null && encodedPassword.equals(user.getPassword())) {
+        final User user = (User) userService.loadUserByUsername(authRequest.username());
+
+        log.debug("credentials: ");
+        log.debug("username: {}", authRequest.username());
+        log.debug("password: {}", authRequest.password());
+        log.debug("user: {}", user);
+
+        if (authRequest.password() != null && passwordEncoder.matches(authRequest.password(), user.getPassword())) {
+
+            log.debug("Password correct");
+
             final String accessToken = jwtProvider.generateAccessToken(user);
             final String refreshToken = jwtProvider.generateRefreshToken(user);
 
             //помещаем рефреш-токен в кеш на 30 дней
             redisClient.setRefreshToken(user.getUsername(), refreshToken);
+            log.info("refresh token created and stored");
 
             return new JwtResponse(accessToken, refreshToken);
         }

@@ -40,6 +40,7 @@ public class User implements UserDetails {
     @Column(unique = true)
     private String username;
 
+    @Column(length = 2000)
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
