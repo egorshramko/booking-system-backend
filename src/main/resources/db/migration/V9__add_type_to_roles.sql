@@ -1,0 +1,2 @@
+ALTER TABLE role_ ADD COLUMN type VARCHAR(255) CHECK ((type IN ('SYSTEM', 'CUSTOM')));
+UPDATE role_ SET type = 'SYSTEM' WHERE name = 'SUPERUSER';

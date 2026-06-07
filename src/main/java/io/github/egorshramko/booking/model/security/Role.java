@@ -33,6 +33,9 @@ public class Role {
 
     private String name;
 
+    @Enumerated(EnumType.STRING)
+    private RoleType type;
+
     @ManyToMany(cascade = CascadeType.DETACH)
     @JoinTable(name = "role_permission",
         joinColumns = @JoinColumn(name = "role_"),
