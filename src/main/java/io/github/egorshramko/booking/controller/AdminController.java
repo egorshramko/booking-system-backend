@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -51,6 +52,12 @@ public final class AdminController {
     public ResponseEntity<RoleDto> fetchRole(@PathVariable Long id) {
         final RoleDto responseBody = roleService.getRoleById(id);
         return ResponseEntity.ok(responseBody);
+    }
+
+    @GetMapping("roles")
+    public ResponseEntity<Set<RoleDto>> fetchRolePage(@RequestParam("page") Integer pageNumber) {
+        final Set<RoleDto> rolesPage = roleService.getRolePage(pageNumber);
+        return ResponseEntity.ok(rolesPage);
     }
 
     @PutMapping("role/{id}")

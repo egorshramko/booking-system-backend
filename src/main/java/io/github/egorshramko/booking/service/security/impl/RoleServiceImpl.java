@@ -3,11 +3,15 @@ package io.github.egorshramko.booking.service.security.impl;
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.exception.RoleUniqueException;
 import io.github.egorshramko.booking.exception.SystemRoleModificationException;
+import io.github.egorshramko.booking.model.security.Permission;
 import io.github.egorshramko.booking.model.security.Role;
 import io.github.egorshramko.booking.model.security.RoleType;
+import io.github.egorshramko.booking.repository.security.PermissionRepository;
 import io.github.egorshramko.booking.repository.security.RoleRepository;
+import io.github.egorshramko.booking.service.security.PermissionService;
 import io.github.egorshramko.booking.service.security.RoleService;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -16,30 +20,43 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
-
-    public RoleServiceImpl(RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
+    private final PermissionRepository permissionRepository;
 
     @Override
     @Transactional
     public Role addRole(Role role) throws EmptyRequiredFieldException {
 
         log.info("Start adding role");
+        log.debug("role: {}", role);
         if (role.getName() == null) {
             log.warn("Role name is empty");
             throw new EmptyRequiredFieldException("Role name is empty");
         }
 
+        //Загрузка разрешений из базы и привязка к создаваемой роли
+        final Set<Permission> permissionsEntitySet = role.getPermissions().stream()
+                        .map((permission) ->
+                                permissionRepository.getByTypeAndObject(
+                                        permission.getType(),
+                                        permission.getObject())
+                                        .orElseThrow(() -> new EntityNotFoundException(
+                                                "Unknown permission " + permission.getAuthority())))
+                                .collect(Collectors.toSet());
+        role.setPermissions(permissionsEntitySet);
+
+        log.debug("Role after loading permissions: {}", role);
         log.info("Searching role with name {}", role.getName());
         //Поиск роли с аналогичным названием
-        Optional<Role> roleOptional = roleRepository.findByName(role.getName());
+        final Optional<Role> roleOptional = roleRepository.findByName(role.getName());
         if (roleOptional.isEmpty()) {
             log.info("Role not found");
             role.setActual(true);
@@ -47,7 +64,7 @@ public class RoleServiceImpl implements RoleService {
             return roleRepository.save(role);
         }
         else {
-            Role roleEntity = roleOptional.get();
+            final Role roleEntity = roleOptional.get();
             if (roleEntity.isActual()) {
                 log.warn("Role found");
                 throw new RoleUniqueException("Role with name " + role.getName() + " is already exists");
@@ -79,10 +96,23 @@ public class RoleServiceImpl implements RoleService {
         }
 
         log.info("Searching entity for editing");
-        Role roleEntity = roleRepository.findByIdAndActualIsTrue(role.getId())
+        final Role roleEntity = roleRepository.findByIdAndActualIsTrue(role.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Role with id " + role.getId() + " not found"));
         if (roleEntity.getType() != RoleType.SYSTEM) {
             roleEntity.setName(role.getName());
+
+            log.debug("Input role: {}", role);
+            //Обновление разрешений
+            final Set<Permission> permissionsEntitySet = role.getPermissions().stream()
+                    .map((permission) ->
+                            permissionRepository.getByTypeAndObject(
+                                            permission.getType(),
+                                            permission.getObject())
+                                    .orElseThrow(() -> new EntityNotFoundException(
+                                            "Unknown permission " + permission.getAuthority())))
+                    .collect(Collectors.toSet());
+            roleEntity.setPermissions(permissionsEntitySet);
+
             return roleRepository.save(roleEntity);
         }
         else {
@@ -118,6 +148,6 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Page<Role> getRolePage(Integer pageNumber) {
-        return roleRepository.findAll(PageRequest.of(pageNumber, 20, Sort.by("name").ascending()));
+        return roleRepository.findAllByActualIsTrue(PageRequest.of(pageNumber, 20, Sort.by("name").ascending()));
     }
 }
