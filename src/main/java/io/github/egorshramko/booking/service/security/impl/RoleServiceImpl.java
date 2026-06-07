@@ -2,7 +2,9 @@ package io.github.egorshramko.booking.service.security.impl;
 
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.exception.RoleUniqueException;
+import io.github.egorshramko.booking.exception.SystemRoleModificationException;
 import io.github.egorshramko.booking.model.security.Role;
+import io.github.egorshramko.booking.model.security.RoleType;
 import io.github.egorshramko.booking.repository.security.RoleRepository;
 import io.github.egorshramko.booking.service.security.RoleService;
 import jakarta.persistence.EntityNotFoundException;
@@ -41,6 +43,7 @@ public class RoleServiceImpl implements RoleService {
         if (roleOptional.isEmpty()) {
             log.info("Role not found");
             role.setActual(true);
+            role.setType(RoleType.CUSTOM);
             return roleRepository.save(role);
         }
         else {
@@ -52,6 +55,7 @@ public class RoleServiceImpl implements RoleService {
             else {
                 log.info("Found not actual role");
                 roleEntity.setActual(true);
+                roleEntity.setType(RoleType.CUSTOM);
                 roleEntity.setPermissions(role.getPermissions());
                 return roleRepository.save(roleEntity);
             }
@@ -77,9 +81,14 @@ public class RoleServiceImpl implements RoleService {
         log.info("Searching entity for editing");
         Role roleEntity = roleRepository.findByIdAndActualIsTrue(role.getId())
                 .orElseThrow(() -> new EntityNotFoundException("Role with id " + role.getId() + " not found"));
+        if (roleEntity.getType() != RoleType.SYSTEM) {
+            roleEntity.setName(role.getName());
+            return roleRepository.save(roleEntity);
+        }
+        else {
+            throw new SystemRoleModificationException("Attempt to edit system role");
+        }
 
-        roleEntity.setName(role.getName());
-        return roleRepository.save(roleEntity);
 
     }
 
@@ -93,8 +102,14 @@ public class RoleServiceImpl implements RoleService {
             log.info("Role for removing found");
 
             Role removingRole = roleOptional.get();
-            removingRole.setActual(false);
-            roleRepository.save(removingRole);
+            if (removingRole.getType() != RoleType.SYSTEM) {
+                removingRole.setActual(false);
+                roleRepository.save(removingRole);
+            }
+            else {
+                throw new SystemRoleModificationException("Attempt to removing system role");
+            }
+
         }
         else {
             log.info("Role for removing not found");
