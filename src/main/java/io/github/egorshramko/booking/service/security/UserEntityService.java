@@ -1,5 +1,6 @@
 package io.github.egorshramko.booking.service.security;
 
+import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.model.security.User;
 import org.springframework.data.domain.Page;
 
@@ -10,7 +11,7 @@ public interface UserEntityService {
      * @param user - добавляемый пользователь
      * @return созданная сущность пользователя
      */
-    User addUser(User user);
+    User addUser(User user) throws EmptyRequiredFieldException;
 
     /**
      * Метод получения пользователя по ID
