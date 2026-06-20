@@ -77,7 +77,7 @@ public class AuthServiceImpl implements AuthService {
             final String username = claims.getSubject();
             final String savedRefreshToken = redisClient.getRefreshToken(username);
             if (savedRefreshToken != null && savedRefreshToken.equals(refreshToken)) {
-                final User user = userRepository.findByUsername(username)
+                final User user = userRepository.findByUsernameAndActualIsTrue(username)
                         .orElseThrow(() -> new AuthException("Username not found"));
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 return new JwtResponse(accessToken, null);
@@ -93,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
             final String username = claims.getSubject();
             final String savedRefreshToken = redisClient.getRefreshToken(username);
             if (savedRefreshToken != null && savedRefreshToken.equals(refreshToken)) {
-                final User user = userRepository.findByUsername(username)
+                final User user = userRepository.findByUsernameAndActualIsTrue(username)
                         .orElseThrow(() -> new AuthException("Username not found"));
                 final String accessToken = jwtProvider.generateAccessToken(user);
                 final String newRefreshToken = jwtProvider.generateRefreshToken(user);

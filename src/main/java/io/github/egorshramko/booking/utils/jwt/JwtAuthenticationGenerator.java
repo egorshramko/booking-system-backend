@@ -21,7 +21,7 @@ public final class JwtAuthenticationGenerator {
         final JwtAuthentication jwtAuthentication = new JwtAuthentication();
 
         final String username = claims.getSubject();
-        final User user = userRepository.findByUsername(username)
+        final User user = userRepository.findByUsernameAndActualIsTrue(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
 
         jwtAuthentication.setUser(user);
