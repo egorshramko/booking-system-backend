@@ -24,15 +24,17 @@ public class SecurityConfig {
         return http
                 .authorizeHttpRequests(authorizeRequests -> {
                     authorizeRequests
-                            .requestMatchers(
-                                    "/api/auth/login",
-                                    "/api/auth/token")
-                            .permitAll()
+//                            .requestMatchers(
+//                                    "/api/auth/login",
+//                                    "/api/auth/token")
+//                            .permitAll()
+//                            .anyRequest()
+//                            .authenticated();
                             .anyRequest()
-                            .authenticated();
+                            .permitAll();
                 })
                 .csrf(AbstractHttpConfigurer::disable) //TODO: убрать отключение CSRF
-                .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                //.addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
