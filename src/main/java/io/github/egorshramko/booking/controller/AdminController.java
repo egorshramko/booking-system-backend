@@ -1,11 +1,10 @@
 package io.github.egorshramko.booking.controller;
 
 import io.github.egorshramko.booking.dto.RoleDto;
-import io.github.egorshramko.booking.dto.admin.AdminCreateRoleRequest;
-import io.github.egorshramko.booking.dto.admin.AdminCreateRoleResponse;
-import io.github.egorshramko.booking.dto.admin.AdminPermissionsResponse;
+import io.github.egorshramko.booking.dto.admin.*;
 import io.github.egorshramko.booking.dto.PermissionDto;
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
+import io.github.egorshramko.booking.facade.AdminUserFacade;
 import io.github.egorshramko.booking.facade.PermissionServiceFacade;
 import io.github.egorshramko.booking.facade.RoleServiceFacade;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +26,9 @@ public final class AdminController {
 
     @Autowired
     private RoleServiceFacade roleService;
+
+    @Autowired
+    private AdminUserFacade adminUserFacade;
 
     @GetMapping("permissions")
     public ResponseEntity<AdminPermissionsResponse> fetchAllSystemPermissions() {
@@ -75,6 +77,10 @@ public final class AdminController {
                 .build();
     }
 
-
+    @PostMapping("user")
+    public ResponseEntity<AdminCreateUserResponse> createUser(@RequestBody AdminCreateUserRequest request) throws EmptyRequiredFieldException {
+        final AdminCreateUserResponse responseBody = adminUserFacade.createUser(request);
+        return ResponseEntity.ok(responseBody);
+    }
 
 }

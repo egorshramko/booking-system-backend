@@ -1,12 +1,14 @@
 package io.github.egorshramko.booking.service.security.impl;
 
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
+import io.github.egorshramko.booking.exception.UserUniqueException;
 import io.github.egorshramko.booking.model.security.User;
 import io.github.egorshramko.booking.repository.security.UserRepository;
 import io.github.egorshramko.booking.service.security.UserEntityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,7 +16,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -29,16 +33,42 @@ public class UserServiceImpl implements UserDetailsService, UserEntityService {
     @Override
     @NullMarked
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username)
+        return userRepository.findByUsernameAndActualIsTrue(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User with username " + username + " not found"));
     }
 
     @Override
+    @Transactional
     public User addUser(User user) throws EmptyRequiredFieldException {
 
+        log.debug("Start addUser method");
 
+        //проверка, что пользователя с таким именем не существует
+        final String username = user.getUsername();
+        final Optional<User> userOptional = userRepository.findByUsernameAndActualIsTrue(username);
+        if (userOptional.isPresent()) {
+            log.warn("User with username {} is already exists", username);
+            throw new UserUniqueException("User with username " + username + " is already exists");
+        }
 
-        return null;
+        //шифрование пароля и установка актуальности для пользователя
+        final String encodedPassword = passwordEncoder.encode(user.getPassword());
+
+        if (encodedPassword != null) {
+            user.setPassword(encodedPassword);
+        }
+        else {
+            log.warn("Empty encoded password in user entity");
+            throw new EmptyRequiredFieldException("Empty encoded password in user entity");
+        }
+        user.setActual(true);
+
+        //TODO: добавить дефолтную роль для пользователя при создании
+
+        //сохранение пользователя
+        log.info("Saving user");
+        log.debug("Finish addUser method");
+        return userRepository.save(user);
     }
 
     @Override
