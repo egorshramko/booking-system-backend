@@ -5,6 +5,7 @@ import io.github.egorshramko.booking.exception.UserUniqueException;
 import io.github.egorshramko.booking.model.security.User;
 import io.github.egorshramko.booking.repository.security.UserRepository;
 import io.github.egorshramko.booking.service.security.UserEntityService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NullMarked;
@@ -73,7 +74,8 @@ public class UserServiceImpl implements UserDetailsService, UserEntityService {
 
     @Override
     public User getUserById(Long userId) {
-        return null;
+        return userRepository.findByIdAndActualIsTrue(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
     }
 
     @Override

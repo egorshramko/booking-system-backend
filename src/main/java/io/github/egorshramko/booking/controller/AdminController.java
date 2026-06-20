@@ -83,4 +83,10 @@ public final class AdminController {
         return ResponseEntity.ok(responseBody);
     }
 
+    @GetMapping("user/{id}")
+    public ResponseEntity<AdminGetUserResponse> getUser(@PathVariable Long id) {
+        final AdminGetUserResponse responseBody = adminUserFacade.getUserById(id);
+        return ResponseEntity.ok(responseBody);
+    }
+
 }
