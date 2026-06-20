@@ -1,11 +1,7 @@
 package io.github.egorshramko.booking.model.security;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.jspecify.annotations.NonNull;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,11 +31,14 @@ public class User implements UserDetails {
     @Builder.Default
     private final LocalDateTime createdAt = LocalDateTime.now();
 
+    @Getter(AccessLevel.NONE)
     private Boolean actual;
 
+    @NonNull
     @Column(unique = true)
     private String username;
 
+    @NonNull
     @Column(length = 2000)
     private String password;
 
@@ -64,5 +63,9 @@ public class User implements UserDetails {
 
     public void removeRole(Role role) {
         roles.remove(role);
+    }
+
+    public Boolean isActual() {
+        return actual;
     }
 }

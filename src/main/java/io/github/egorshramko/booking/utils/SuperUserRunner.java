@@ -59,6 +59,12 @@ public class SuperUserRunner implements CommandLineRunner {
             superuser.addRole(superuserRole);
             userRepository.save(superuser);
         }
+        else {
+            User superuser = superuserOptional.get();
+            if (!superuser.isActual()) {
+                superuser.setActual(true);
+            }
+        }
 
     }
 }
