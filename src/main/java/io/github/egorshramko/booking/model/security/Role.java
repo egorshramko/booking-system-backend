@@ -31,6 +31,7 @@ public class Role {
     @Getter(AccessLevel.NONE)
     private Boolean actual;
 
+    @Column(unique = true)
     private String name;
 
     @Enumerated(EnumType.STRING)
