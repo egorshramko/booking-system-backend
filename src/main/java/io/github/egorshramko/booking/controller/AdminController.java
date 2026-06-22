@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -78,15 +78,27 @@ public final class AdminController {
     }
 
     @PostMapping("user")
-    public ResponseEntity<AdminCreateUserResponse> createUser(@RequestBody AdminCreateUserRequest request) throws EmptyRequiredFieldException {
+    public ResponseEntity<AdminCreateUserResponse> createUser(@RequestBody AdminCreateUserRequest request)
+            throws EmptyRequiredFieldException {
         final AdminCreateUserResponse responseBody = adminUserFacade.createUser(request);
         return ResponseEntity.ok(responseBody);
     }
 
     @GetMapping("user/{id}")
-    public ResponseEntity<AdminGetUserResponse> getUser(@PathVariable Long id) {
-        final AdminGetUserResponse responseBody = adminUserFacade.getUserById(id);
+    public ResponseEntity<AdminUserDataResponse> getUser(@PathVariable Long id) {
+        final AdminUserDataResponse responseBody = adminUserFacade.getUserById(id);
         return ResponseEntity.ok(responseBody);
     }
+
+    @PutMapping("user/{id}")
+    public ResponseEntity<AdminUserDataResponse> updateUser(@PathVariable Long id,
+                                                            @RequestBody AdminUpdateUserRequest requestBody) {
+
+        final AdminUserDataResponse responseBody = adminUserFacade.updateUserById(id, requestBody);
+        return ResponseEntity.ok(responseBody);
+
+    }
+
+
 
 }

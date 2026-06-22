@@ -2,18 +2,19 @@ package io.github.egorshramko.booking.facade.impl;
 
 import io.github.egorshramko.booking.dto.admin.AdminCreateUserRequest;
 import io.github.egorshramko.booking.dto.admin.AdminCreateUserResponse;
-import io.github.egorshramko.booking.dto.admin.AdminGetUserResponse;
+import io.github.egorshramko.booking.dto.admin.AdminUpdateUserRequest;
+import io.github.egorshramko.booking.dto.admin.AdminUserDataResponse;
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.facade.AdminUserFacade;
 import io.github.egorshramko.booking.model.security.Role;
 import io.github.egorshramko.booking.model.security.User;
 import io.github.egorshramko.booking.service.security.UserEntityService;
 import io.github.egorshramko.booking.utils.mapper.UserMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -35,20 +36,27 @@ public class AdminUserFacadeImpl implements AdminUserFacade {
 
         //TODO: организовать сохранение профиля
 
-        return new AdminCreateUserResponse(savedUser.getId());
+        return userMapper.toAdminCreateUserResponse(user);
     }
 
     @Override
-    public AdminGetUserResponse getUserById(Long id) {
+    public AdminUserDataResponse getUserById(Long id) {
         final User user = userEntityService.getUserById(id);
-
-        final String username = user.getUsername();
-        final Set<String> userRoles = user.getRoles().stream()
-                .map(Role::getName)
-                .collect(Collectors.toSet());
 
         //TODO: организовать выгрузку данных профиля
 
-        return new AdminGetUserResponse(username, userRoles, null);
+        return userMapper.toAdminUserDataResponse(user);
+    }
+
+    @Override
+    public AdminUserDataResponse updateUserById(Long id, AdminUpdateUserRequest request) {
+
+        final User updatingUser = userEntityService.getUserById(id);
+        userMapper.updateUserFromAdminUpdateUserDto(request.user(), updatingUser);
+        final User updatedUser = userEntityService.editUser(updatingUser);
+
+        //TODO: организовать редактирование профиля
+
+        return userMapper.toAdminUserDataResponse(updatedUser);
     }
 }

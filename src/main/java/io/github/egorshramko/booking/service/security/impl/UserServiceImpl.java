@@ -2,7 +2,9 @@ package io.github.egorshramko.booking.service.security.impl;
 
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.exception.UserUniqueException;
+import io.github.egorshramko.booking.model.security.Role;
 import io.github.egorshramko.booking.model.security.User;
+import io.github.egorshramko.booking.repository.security.RoleRepository;
 import io.github.egorshramko.booking.repository.security.UserRepository;
 import io.github.egorshramko.booking.service.security.UserEntityService;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,8 +21,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.relation.RoleNotFoundException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,6 +35,7 @@ public class UserServiceImpl implements UserDetailsService, UserEntityService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
     @Override
     @NullMarked
@@ -79,8 +85,19 @@ public class UserServiceImpl implements UserDetailsService, UserEntityService {
     }
 
     @Override
+    @Transactional
     public User editUser(User user) {
+
+        log.debug("Start editUser method");
+
+        log.debug("user: {}", user);
+
+
+
+        log.debug("user: {}", user);
+
         return null;
+
     }
 
     @Override

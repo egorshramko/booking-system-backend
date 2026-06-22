@@ -4,6 +4,8 @@ import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.model.security.User;
 import org.springframework.data.domain.Page;
 
+import javax.management.relation.RoleNotFoundException;
+
 public interface UserEntityService {
 
     /**

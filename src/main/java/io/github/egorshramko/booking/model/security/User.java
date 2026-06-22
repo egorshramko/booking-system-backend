@@ -42,7 +42,7 @@ public class User implements UserDetails {
     @Column(length = 2000)
     private String password;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
     @JoinTable(name = "user_role",
         joinColumns = @JoinColumn(name = "user_"),
         inverseJoinColumns = @JoinColumn(name = "role_"))

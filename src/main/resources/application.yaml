@@ -11,6 +11,7 @@ logging:
                 impl:
                   AuthServiceImpl: INFO
                   RoleServiceImpl: DEBUG
+                  UserServiceImpl: DEBUG
 
 spring:
   application:
