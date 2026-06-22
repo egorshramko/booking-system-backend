@@ -92,11 +92,20 @@ public class UserServiceImpl implements UserDetailsService, UserEntityService {
 
         log.debug("user: {}", user);
 
+        Set<String> roleNames = user.getRoles().stream()
+                        .map(Role::getName)
+                        .collect(Collectors.toSet());
 
+        user.getRoles().clear();
+        for (String roleName : roleNames) {
+            Role role = roleRepository.findByName(roleName)
+                    .orElseThrow(() -> new EntityNotFoundException("Role with name " + roleName + " not found"));
+            user.addRole(role);
+        }
 
         log.debug("user: {}", user);
 
-        return null;
+        return userRepository.save(user);
 
     }
 
