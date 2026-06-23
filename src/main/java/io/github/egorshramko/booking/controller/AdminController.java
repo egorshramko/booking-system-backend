@@ -9,6 +9,7 @@ import io.github.egorshramko.booking.facade.PermissionServiceFacade;
 import io.github.egorshramko.booking.facade.RoleServiceFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -90,12 +91,33 @@ public final class AdminController {
         return ResponseEntity.ok(responseBody);
     }
 
+    @GetMapping("users")
+    public ResponseEntity<AdminGetUsersResponse> getUsersPage(@Param("page") Integer page) {
+        AdminGetUsersResponse responseBody = adminUserFacade.getUsersPage(page - 1);
+        return ResponseEntity.ok(responseBody);
+    }
+
+    @GetMapping("users/pages")
+    public ResponseEntity<AdminGetUsersPagesCountResponse> getUsersPagesCount() {
+        final AdminGetUsersPagesCountResponse responseBody = adminUserFacade.getUsersPagesCount();
+
+        return ResponseEntity.ok(responseBody);
+    }
+
     @PutMapping("user/{id}")
     public ResponseEntity<AdminUserDataResponse> updateUser(@PathVariable Long id,
                                                             @RequestBody AdminUpdateUserRequest requestBody) {
 
         final AdminUserDataResponse responseBody = adminUserFacade.updateUserById(id, requestBody);
         return ResponseEntity.ok(responseBody);
+
+    }
+
+    @DeleteMapping("user/{id}")
+    public ResponseEntity<Void> removeUser(@PathVariable Long id) {
+
+        adminUserFacade.removeUser(id);
+        return ResponseEntity.noContent().build();
 
     }
 

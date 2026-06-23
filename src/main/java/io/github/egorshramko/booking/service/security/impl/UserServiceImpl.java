@@ -14,6 +14,8 @@ import org.jspecify.annotations.NullMarked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -110,12 +112,25 @@ public class UserServiceImpl implements UserDetailsService, UserEntityService {
     }
 
     @Override
+    @Transactional
     public void removeUser(Long userId) {
-
+        User removingUser = userRepository.findByIdAndActualIsTrue(userId)
+                .orElse(null);
+        if (removingUser != null) {
+            removingUser.setActual(false);
+            userRepository.save(removingUser);
+        }
     }
 
     @Override
     public Page<User> getUsersPage(Integer pageNumber) {
-        return null;
+        return userRepository.findAllByActualIsTrue(PageRequest.of(pageNumber, 20,
+                Sort.by("username").ascending()));
+    }
+
+    @Override
+    public Integer getUsersPagesCount() {
+        Page<User> usersPage = this.getUsersPage(0);
+        return usersPage.getTotalPages();
     }
 }

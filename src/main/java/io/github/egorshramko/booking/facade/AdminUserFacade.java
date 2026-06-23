@@ -1,9 +1,6 @@
 package io.github.egorshramko.booking.facade;
 
-import io.github.egorshramko.booking.dto.admin.AdminCreateUserRequest;
-import io.github.egorshramko.booking.dto.admin.AdminCreateUserResponse;
-import io.github.egorshramko.booking.dto.admin.AdminUpdateUserRequest;
-import io.github.egorshramko.booking.dto.admin.AdminUserDataResponse;
+import io.github.egorshramko.booking.dto.admin.*;
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 
 import javax.management.relation.RoleNotFoundException;
@@ -15,5 +12,11 @@ public interface AdminUserFacade {
     AdminUserDataResponse getUserById(Long id);
 
     AdminUserDataResponse updateUserById(Long id, AdminUpdateUserRequest request);
+
+    void removeUser(Long id);
+
+    AdminGetUsersResponse getUsersPage(Integer pageNumber);
+
+    AdminGetUsersPagesCountResponse getUsersPagesCount();
 
 }

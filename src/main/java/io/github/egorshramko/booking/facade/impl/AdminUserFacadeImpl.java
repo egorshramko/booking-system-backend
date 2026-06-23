@@ -1,9 +1,6 @@
 package io.github.egorshramko.booking.facade.impl;
 
-import io.github.egorshramko.booking.dto.admin.AdminCreateUserRequest;
-import io.github.egorshramko.booking.dto.admin.AdminCreateUserResponse;
-import io.github.egorshramko.booking.dto.admin.AdminUpdateUserRequest;
-import io.github.egorshramko.booking.dto.admin.AdminUserDataResponse;
+import io.github.egorshramko.booking.dto.admin.*;
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.facade.AdminUserFacade;
 import io.github.egorshramko.booking.model.security.Role;
@@ -12,9 +9,11 @@ import io.github.egorshramko.booking.service.security.UserEntityService;
 import io.github.egorshramko.booking.utils.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
 import javax.management.relation.RoleNotFoundException;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -58,5 +57,30 @@ public class AdminUserFacadeImpl implements AdminUserFacade {
         //TODO: организовать редактирование профиля
 
         return userMapper.toAdminUserDataResponse(updatedUser);
+    }
+
+    @Override
+    public void removeUser(Long id) {
+        userEntityService.removeUser(id);
+    }
+
+    @Override
+    public AdminGetUsersResponse getUsersPage(Integer pageNumber) {
+        final Page<User> usersPage = userEntityService.getUsersPage(pageNumber);
+
+        //преобразование страницы пользователей в список
+        final List<User> usersList = usersPage.stream()
+                .toList();
+
+        final List<AdminGetUsersResponseUserDto> usersDtoList =
+                userMapper.toAdminGetUsersResponseUserDtoList(usersList);
+
+        return new AdminGetUsersResponse(usersDtoList);
+    }
+
+    @Override
+    public AdminGetUsersPagesCountResponse getUsersPagesCount() {
+        final Integer pagesCount = userEntityService.getUsersPagesCount();
+        return new AdminGetUsersPagesCountResponse(pagesCount);
     }
 }

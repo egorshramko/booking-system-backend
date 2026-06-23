@@ -1,13 +1,11 @@
 package io.github.egorshramko.booking.utils.mapper;
 
 import io.github.egorshramko.booking.dto.RoleDto;
-import io.github.egorshramko.booking.dto.admin.AdminCreateUserRequestUserDto;
-import io.github.egorshramko.booking.dto.admin.AdminCreateUserResponse;
-import io.github.egorshramko.booking.dto.admin.AdminUpdateUserRequestUserDto;
-import io.github.egorshramko.booking.dto.admin.AdminUserDataResponse;
+import io.github.egorshramko.booking.dto.admin.*;
 import io.github.egorshramko.booking.model.security.User;
 import org.mapstruct.*;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,5 +24,9 @@ public interface UserMapper {
 
     AdminCreateUserResponse toAdminCreateUserResponse(User user);
     AdminUserDataResponse toAdminUserDataResponse(User user);
+
+    AdminGetUsersResponseUserDto toAdminGetUsersResponseUserDto(User user);
+
+    List<AdminGetUsersResponseUserDto> toAdminGetUsersResponseUserDtoList(List<User> users);
 
 }

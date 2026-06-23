@@ -41,4 +41,10 @@ public interface UserEntityService {
      * @return Страница пользователей
      */
     Page<User> getUsersPage(Integer pageNumber);
+
+    /**
+     * Метод получения количества страниц пользователей
+     * @return количество страниц пользователей
+     */
+    Integer getUsersPagesCount();
 }
