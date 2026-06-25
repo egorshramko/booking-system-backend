@@ -1,0 +1,122 @@
+-- создание секвенции для первичного ключа справочника
+CREATE SEQUENCE IF NOT EXISTS city_pkey_seq START WITH 1 INCREMENT BY 1;
+
+-- создание таблицы городов
+CREATE TABLE IF NOT EXISTS city (
+    id BIGINT NOT NULL,
+    created_at TIMESTAMP(6),
+    address VARCHAR(1023),
+    postal_code INTEGER,
+    country VARCHAR(255),
+    federal_district VARCHAR(255),
+    region_type VARCHAR(255),
+    region VARCHAR(255),
+    area_type VARCHAR(255),
+    area VARCHAR(255),
+    city_type VARCHAR(255),
+    city VARCHAR(1023),
+    settlement_type VARCHAR(255),
+    settlement VARCHAR(255),
+    kladr_id VARCHAR(14),
+    fias_id VARCHAR(255),
+    fias_level INTEGER,
+    capital_marker INTEGER,
+    okato VARCHAR(12),
+    oktmo VARCHAR(12),
+    tax_office VARCHAR(5),
+    timezone VARCHAR(7),
+    geo_lat DECIMAL(9, 7),
+    geo_lon DECIMAL(9, 7),
+    population INTEGER,
+    foundation_year INTEGER,
+    PRIMARY KEY (id)
+);
+
+-- создание временной таблицы для хранения импортированных городов
+CREATE TEMP TABLE city_import (
+    address VARCHAR(1023),
+    postal_code INTEGER,
+    country VARCHAR(255),
+    federal_district VARCHAR(255),
+    region_type VARCHAR(255),
+    region VARCHAR(255),
+    area_type VARCHAR(255),
+    area VARCHAR(255),
+    city_type VARCHAR(255),
+    city VARCHAR(1023),
+    settlement_type VARCHAR(255),
+    settlement VARCHAR(255),
+    kladr_id VARCHAR(14),
+    fias_id VARCHAR(255),
+    fias_level INTEGER,
+    capital_marker INTEGER,
+    okato VARCHAR(12),
+    oktmo VARCHAR(12),
+    tax_office VARCHAR(5),
+    timezone VARCHAR(7),
+    geo_lat DECIMAL(9, 7),
+    geo_lon DECIMAL(9, 7),
+    population INTEGER,
+    foundation_year INTEGER
+);
+
+-- импорт справочника
+COPY city_import FROM '/tmp/data/csv/city.csv' DELIMITER ',' QUOTE '"' CSV HEADER;
+
+-- вставка в таблицу городов с учетом первичного ключа
+INSERT INTO city (id,
+                  created_at,
+                  address,
+                  postal_code,
+                  country,
+                  federal_district,
+                  region_type,
+                  region,
+                  area_type,
+                  area,
+                  city_type,
+                  city,
+                  settlement_type,
+                  settlement,
+                  kladr_id,
+                  fias_id,
+                  fias_level,
+                  capital_marker,
+                  okato,
+                  oktmo,
+                  tax_office,
+                  timezone,
+                  geo_lat,
+                  geo_lon,
+                  population,
+                  foundation_year)
+SELECT nextval('city_pkey_seq'),
+     now(),
+     address,
+     postal_code,
+     country,
+     federal_district,
+     region_type,
+     region,
+     area_type,
+     area,
+     city_type,
+     city,
+     settlement_type,
+     settlement,
+     kladr_id,
+     fias_id,
+     fias_level,
+     capital_marker,
+     okato,
+     oktmo,
+     tax_office,
+     timezone,
+     geo_lat,
+     geo_lon,
+     population,
+     foundation_year
+FROM city_import;
+
+-- установка актуального значения секвенции
+SELECT setval('city_pkey_seq', (SELECT max(id) FROM city));
