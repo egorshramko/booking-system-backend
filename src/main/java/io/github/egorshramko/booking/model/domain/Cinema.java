@@ -37,6 +37,9 @@ public class Cinema {
     @JoinColumn(name = "cinema_id")
     private Set<Employee> employees = new HashSet<>();
 
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "cinema")
+    private Employee manager;
+
     //JSON схемы мест
     private String seatingChartJson;
 

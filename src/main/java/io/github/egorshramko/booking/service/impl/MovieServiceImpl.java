@@ -3,6 +3,7 @@ package io.github.egorshramko.booking.service.impl;
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.model.domain.Movie;
 import io.github.egorshramko.booking.repository.domain.MovieRepository;
+import io.github.egorshramko.booking.service.ImageService;
 import io.github.egorshramko.booking.service.MovieService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -28,10 +29,7 @@ public class MovieServiceImpl implements MovieService {
     private MovieRepository movieRepository;
 
     @Autowired
-    private S3Client s3Client;
-
-    @Value("${aws.buckets.movie-service}")
-    private String s3BucketName;
+    private ImageService imageService;
 
     @Override
     @Transactional
@@ -40,7 +38,7 @@ public class MovieServiceImpl implements MovieService {
         //Проверка, что изображение постера было загружено в S3-хранилище
         String moviePosterImage = movie.getPosterFilename();
         log.info("Checking poster file uploading");
-        if (imageIsUploaded(moviePosterImage)) {
+        if (imageService.imageIsUploaded(moviePosterImage)) {
 
             //устанавливаем актуальность фильма для базы
             movie.setActual(true);
@@ -153,23 +151,4 @@ public class MovieServiceImpl implements MovieService {
                 Sort.by("name").ascending()));
     }
 
-    private Boolean imageIsUploaded(String posterImageFilename) {
-        HeadObjectRequest headObjectRequest = HeadObjectRequest.builder()
-                .bucket(s3BucketName)
-                .key(posterImageFilename)
-                .build();
-        try {
-            s3Client.headObject(headObjectRequest);
-
-            return true;
-        }
-        catch(NoSuchKeyException exception) {
-            //если файл не найден, то возвращаем false
-            return false;
-        }
-        catch (Exception exception) {
-            throw new RuntimeException(exception.getMessage());
-        }
-
-    }
 }

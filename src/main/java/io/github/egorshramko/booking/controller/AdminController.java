@@ -4,6 +4,7 @@ import io.github.egorshramko.booking.dto.RoleDto;
 import io.github.egorshramko.booking.dto.admin.*;
 import io.github.egorshramko.booking.dto.PermissionDto;
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
+import io.github.egorshramko.booking.facade.AdminCinemaFacade;
 import io.github.egorshramko.booking.facade.AdminUserFacade;
 import io.github.egorshramko.booking.facade.PermissionServiceFacade;
 import io.github.egorshramko.booking.facade.RoleServiceFacade;
@@ -30,6 +31,9 @@ public final class AdminController {
 
     @Autowired
     private AdminUserFacade adminUserFacade;
+
+    @Autowired
+    private AdminCinemaFacade adminCinemaFacade;
 
     @GetMapping("permissions")
     public ResponseEntity<AdminPermissionsResponse> fetchAllSystemPermissions() {
@@ -118,6 +122,14 @@ public final class AdminController {
 
         adminUserFacade.removeUser(id);
         return ResponseEntity.noContent().build();
+
+    }
+
+    @PostMapping("cinema")
+    public ResponseEntity<AdminCreateCinemaResponse> createCinema(@RequestBody AdminCreateCinemaRequest requestBody) {
+
+        AdminCreateCinemaResponse responseBody = adminCinemaFacade.createCinema(requestBody);
+        return ResponseEntity.ok(responseBody);
 
     }
 

@@ -14,4 +14,12 @@ public interface ImageService {
      */
     String generatePreSignedUrl(String bucket, String filePath,
                            SdkHttpMethod method);
+
+
+    /**
+     * Проверяет, существует ли изображение с заданным именем
+     * @param posterImageFilename - имя файла
+     * @return результат поиска файла в хранилище
+     */
+    Boolean imageIsUploaded(String posterImageFilename);
 }
