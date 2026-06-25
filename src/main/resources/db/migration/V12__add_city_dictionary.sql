@@ -25,8 +25,8 @@ CREATE TABLE IF NOT EXISTS city (
     oktmo VARCHAR(12),
     tax_office VARCHAR(5),
     timezone VARCHAR(7),
-    geo_lat DECIMAL(9, 7),
-    geo_lon DECIMAL(9, 7),
+    geo_lat DECIMAL(11, 7),
+    geo_lon DECIMAL(11, 7),
     population INTEGER,
     foundation_year INTEGER,
     PRIMARY KEY (id)
@@ -54,8 +54,8 @@ CREATE TEMP TABLE city_import (
     oktmo VARCHAR(12),
     tax_office VARCHAR(5),
     timezone VARCHAR(7),
-    geo_lat DECIMAL(9, 7),
-    geo_lon DECIMAL(9, 7),
+    geo_lat DECIMAL(11, 7),
+    geo_lon DECIMAL(11, 7),
     population INTEGER,
     foundation_year INTEGER
 );
