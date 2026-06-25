@@ -1,0 +1,1 @@
+ALTER TABLE cinema ADD COLUMN cinema_photo_filename VARCHAR(255);

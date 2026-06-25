@@ -3,7 +3,6 @@ package io.github.egorshramko.booking.facade.impl;
 import io.github.egorshramko.booking.dto.admin.*;
 import io.github.egorshramko.booking.exception.EmptyRequiredFieldException;
 import io.github.egorshramko.booking.facade.AdminUserFacade;
-import io.github.egorshramko.booking.model.security.Role;
 import io.github.egorshramko.booking.model.security.User;
 import io.github.egorshramko.booking.service.security.UserEntityService;
 import io.github.egorshramko.booking.utils.mapper.UserMapper;
@@ -12,10 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 
-import javax.management.relation.RoleNotFoundException;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Component

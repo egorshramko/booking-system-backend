@@ -37,6 +37,9 @@ public class Cinema {
     //JSON схемы мест
     private String seatingChartJson;
 
+    //имя файла с фотографией кинотеатра в S3
+    private String cinemaPhotoFilename;
+
     public Employee getManager() {
         return employees.stream()
                 .filter(Employee::isManager)
