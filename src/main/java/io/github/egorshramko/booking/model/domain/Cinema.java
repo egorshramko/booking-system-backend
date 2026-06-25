@@ -1,5 +1,6 @@
 package io.github.egorshramko.booking.model.domain;
 
+import io.github.egorshramko.booking.model.dictionaries.City;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,7 +29,9 @@ public class Cinema {
 
     private String address;
 
-    private String city;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "city")
+    private City city;
 
     @OneToMany(cascade = {CascadeType.DETACH, CascadeType.PERSIST})
     @JoinColumn(name = "cinema_id")

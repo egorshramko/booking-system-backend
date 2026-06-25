@@ -35,10 +35,9 @@ public class CinemaServiceImpl implements CinemaService {
         validateRequiredFields(cinema);
 
         //Поиск кинотеатра в базе (возможно, он был ранее удален)
-        Optional<Cinema> cinemaOptional = cinemaRepository.findByNameAndAddressAndCity(
+        Optional<Cinema> cinemaOptional = cinemaRepository.findByNameAndAddress(
                 cinema.getName(),
-                cinema.getAddress(),
-                cinema.getCity());
+                cinema.getAddress());
 
         //Если кинотеатр был ранее удален, то его нужно восстановить без схемы посадки
         if (cinemaOptional.isPresent()) {
